@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 # Las fechas se guardan en UTC y las reglas de horario se aplican en hora local.
@@ -12,6 +12,10 @@ def ahora_utc() -> datetime:
 
 def a_hora_local(fecha_utc: datetime) -> datetime:
     return fecha_utc.replace(tzinfo=timezone.utc).astimezone(ZONA_LOCAL)
+
+
+def hoy_local() -> date:
+    return a_hora_local(ahora_utc()).date()
 
 
 def limites_del_dia_utc(fecha_utc: datetime) -> tuple[datetime, datetime]:

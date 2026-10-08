@@ -15,6 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from Conexion_DB import Base
+from utils.horario import hoy_local
 
 
 class Obra(Base):
@@ -60,10 +61,10 @@ class Asistencia(Base):
 
     id = Column(Integer, primary_key=True)
     usuario_id = Column(
-        Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False
+        Integer, ForeignKey("usuarios.id", ondelete="RESTRICT"), nullable=False
     )
     obra_id = Column(
-        Integer, ForeignKey("obras.id", ondelete="CASCADE"), nullable=False
+        Integer, ForeignKey("obras.id", ondelete="RESTRICT"), nullable=False
     )
     fecha_hora_fichaje = Column(DateTime, default=datetime.utcnow)
     tipo = Column(String(10), nullable=False)  # 'entrada' o 'salida'
@@ -81,14 +82,23 @@ class Asistencia(Base):
 
 class Incidencia(Base):
     __tablename__ = "incidencias"
+    __table_args__ = (
+        CheckConstraint(
+            "prioridad IN ('Alta', 'Media', 'Baja')",
+            name="incidencias_prioridad_check",
+        ),
+    )
 
     id = Column(Integer, primary_key=True)
     usuario_id = Column(
-        Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False
+        Integer, ForeignKey("usuarios.id", ondelete="RESTRICT"), nullable=False
     )
-    fecha = Column(Date, default=datetime.utcnow().date)
+    fecha = Column(Date, default=hoy_local)
     motivo_texto = Column(Text, nullable=False)
-    categoria = Column(String(50), default="General")
+    categoria = Column(
+        String(50), default="General"
+    )  # tipo de incidencia: 'Retardo', 'Ausencia', 'Permiso', 'General'
+    prioridad = Column(String(10), nullable=True)  # 'Alta', 'Media', 'Baja'
     estatus_revision = Column(String(20), default="Pendiente")
 
     # Relación ORM

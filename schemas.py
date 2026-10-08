@@ -115,6 +115,7 @@ class IncidenciaResponse(BaseModel):
     fecha: date
     motivo_texto: str
     categoria: str
+    prioridad: Optional[str] = None
     estatus_revision: str
 
     class Config:
