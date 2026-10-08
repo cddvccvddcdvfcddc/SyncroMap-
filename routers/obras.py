@@ -21,10 +21,13 @@ def crear_obra(obra: schemas.ObraCreate, db: Session = Depends(get_db)):
     return db_obra
 
 
-# 2. OBTENER TODAS LAS OBRAS
+# 2. OBTENER OBRAS (solo las activas, salvo que se pidan todas)
 @router.get("/", response_model=List[schemas.ObraResponse])
-def listar_obras(db: Session = Depends(get_db)):
-    return db.query(models.Obra).all()
+def listar_obras(incluir_inactivos: bool = False, db: Session = Depends(get_db)):
+    consulta = db.query(models.Obra)
+    if not incluir_inactivos:
+        consulta = consulta.filter(models.Obra.activo.is_(True))
+    return consulta.all()
 
 
 # 3. OBTENER UNA OBRA POR ID
@@ -53,7 +56,7 @@ def actualizar_obra(
     return obra
 
 
-# 5. ELIMINAR OBRA
+# 5. DAR DE BAJA OBRA (baja lógica: se conserva su historial de asistencias)
 @router.delete("/{obra_id}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_obra(obra_id: int, db: Session = Depends(get_db)):
     obra = db.query(models.Obra).filter(models.Obra.id == obra_id).first()
@@ -61,6 +64,6 @@ def eliminar_obra(obra_id: int, db: Session = Depends(get_db)):
     if not obra:
         raise HTTPException(status_code=404, detail="Obra no encontrada")
 
-    db.delete(obra)
+    obra.activo = False
     db.commit()
     return None
