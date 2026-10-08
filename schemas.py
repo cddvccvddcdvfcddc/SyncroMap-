@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime, date, time
 from typing import Optional
 
@@ -31,8 +31,7 @@ class ObraResponse(ObraBase):
     id: int
     creado_en: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -58,8 +57,7 @@ class UsuarioResponse(UsuarioBase):
     id: int
     creado_en: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -91,8 +89,7 @@ class AsistenciaResponse(BaseModel):
     distancia_calculada_m: float
     estatus_asistencia: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================
@@ -118,5 +115,4 @@ class IncidenciaResponse(BaseModel):
     prioridad: Optional[str] = None
     estatus_revision: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

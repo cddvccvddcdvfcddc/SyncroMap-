@@ -13,9 +13,8 @@ from sqlalchemy import (
     CheckConstraint,
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from Conexion_DB import Base
-from utils.horario import hoy_local
+from utils.horario import ahora_utc, hoy_local
 
 
 class Obra(Base):
@@ -29,7 +28,7 @@ class Obra(Base):
     hora_entrada = Column(Time, default="08:00:00")
     minutos_tolerancia = Column(Integer, default=20)
     activo = Column(Boolean, default=True)
-    creado_en = Column(DateTime, default=datetime.utcnow)
+    creado_en = Column(DateTime, default=ahora_utc)
 
 
 class Usuario(Base):
@@ -44,7 +43,7 @@ class Usuario(Base):
         Integer, ForeignKey("obras.id", ondelete="SET NULL"), nullable=True
     )
     activo = Column(Boolean, default=True)
-    creado_en = Column(DateTime, default=datetime.utcnow)
+    creado_en = Column(DateTime, default=ahora_utc)
 
     # Relaciones ORM
     obra = relationship("Obra", backref="usuarios")
@@ -66,7 +65,7 @@ class Asistencia(Base):
     obra_id = Column(
         Integer, ForeignKey("obras.id", ondelete="RESTRICT"), nullable=False
     )
-    fecha_hora_fichaje = Column(DateTime, default=datetime.utcnow)
+    fecha_hora_fichaje = Column(DateTime, default=ahora_utc)
     tipo = Column(String(10), nullable=False)  # 'entrada' o 'salida'
     latitud_enviada = Column(Float, nullable=False)
     longitud_enviada = Column(Float, nullable=False)
