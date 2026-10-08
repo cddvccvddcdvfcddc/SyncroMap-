@@ -119,13 +119,3 @@ class IncidenciaResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-from pydantic import BaseModel
-
-
-class FichajeCreate(BaseModel):
-    usuario_id: int
-    obra_id: int
-    latitud_usuario: float
-    longitud_usuario: float

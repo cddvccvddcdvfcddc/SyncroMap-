@@ -63,7 +63,7 @@ class Asistencia(Base):
     distancia_calculada_m = Column(Float, nullable=False)
     estatus_asistencia = Column(
         String(30), nullable=False
-    )  # 'A tiempo', 'Retardo', 'Fuera de rango'
+    )  # 'A tiempo', 'Retardo', 'Fuera de rango', 'Salida registrada'
 
     # Relaciones ORM
     usuario = relationship("Usuario", backref="asistencias")
