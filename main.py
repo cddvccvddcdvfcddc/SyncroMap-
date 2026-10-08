@@ -1,12 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import Model as models
-from Conexion_DB import engine
 from routers import obras, usuarios, asistencia
 
-# Crear las tablas que aún no existan.
-models.Base.metadata.create_all(bind=engine)
+# Las tablas se crean y modifican con Alembic: py -m alembic upgrade head
 
 # Crear una sola aplicación.
 app = FastAPI(

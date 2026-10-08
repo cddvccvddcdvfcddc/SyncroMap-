@@ -9,6 +9,8 @@ from sqlalchemy import (
     DateTime,
     Text,
     ForeignKey,
+    Index,
+    CheckConstraint,
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -18,7 +20,7 @@ from Conexion_DB import Base
 class Obra(Base):
     __tablename__ = "obras"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     nombre = Column(String(100), nullable=False)
     latitud_centro = Column(Float, nullable=False)
     longitud_centro = Column(Float, nullable=False)
@@ -31,10 +33,11 @@ class Obra(Base):
 
 class Usuario(Base):
     __tablename__ = "usuarios"
+    __table_args__ = (Index("idx_usuarios_telefono", "telefono"),)
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     nombre = Column(String(100), nullable=False)
-    telefono = Column(String(20), unique=True, nullable=False, index=True)
+    telefono = Column(String(20), unique=True, nullable=False)
     rol = Column(String(20), default="operativo")
     obra_id = Column(
         Integer, ForeignKey("obras.id", ondelete="SET NULL"), nullable=True
@@ -48,8 +51,14 @@ class Usuario(Base):
 
 class Asistencia(Base):
     __tablename__ = "asistencias"
+    __table_args__ = (
+        Index("idx_asistencias_usuario", "usuario_id"),
+        CheckConstraint(
+            "tipo IN ('entrada', 'salida')", name="asistencias_tipo_check"
+        ),
+    )
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     usuario_id = Column(
         Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False
     )
@@ -73,7 +82,7 @@ class Asistencia(Base):
 class Incidencia(Base):
     __tablename__ = "incidencias"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     usuario_id = Column(
         Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False
     )
