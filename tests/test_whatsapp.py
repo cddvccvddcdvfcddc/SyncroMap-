@@ -276,6 +276,25 @@ def test_una_consulta_no_genera_incidencia_ni_fichaje(chat, db):
     assert "Primero escribe" in chat.ubicacion()
 
 
+# ---------- Reporte a petición del supervisor ----------
+
+
+def test_el_supervisor_pide_el_reporte_de_su_obra(chat, usuario, db):
+    usuario.rol = "supervisor"
+    db.commit()
+
+    respuesta = chat.texto("Reporte")
+
+    assert respuesta.startswith("*Reporte de Obra de prueba*\n8 de octubre, 07:50")
+    # El supervisor también cuenta como personal de la obra.
+    assert "Personal: 1" in respuesta
+    assert "Sin entrada: 1\n• Trabajador" in respuesta
+
+
+def test_un_trabajador_no_puede_pedir_el_reporte(chat):
+    assert not chat.texto("reporte").startswith("*Reporte")
+
+
 @pytest.mark.parametrize(
     "texto, esperado",
     [

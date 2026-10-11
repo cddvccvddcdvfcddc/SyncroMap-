@@ -1,9 +1,21 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import obras, usuarios, asistencia, incidencias, whatsapp
+from tareas import iniciar_planificador
 
 # Las tablas se crean y modifican con Alembic: py -m alembic upgrade head
+
+
+@asynccontextmanager
+async def ciclo_de_vida(app: FastAPI):
+    # Las tareas programadas viven mientras el servidor esté encendido.
+    planificador = iniciar_planificador()
+    yield
+    planificador.shutdown(wait=False)
+
 
 # Crear una sola aplicación.
 app = FastAPI(
@@ -13,6 +25,7 @@ app = FastAPI(
         "mediante validación de ubicación."
     ),
     version="1.0.0",
+    lifespan=ciclo_de_vida,
 )
 
 # Configuración para las pruebas de desarrollo.

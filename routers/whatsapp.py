@@ -15,7 +15,8 @@ from routers.asistencia import registrar_asistencia, resumen_del_mes
 from routers.incidencias import guardar_incidencia
 from schemas import AsistenciaCreate
 from utils.clasificador import clasificar
-from utils.horario import a_hora_local, ahora_utc
+from tareas import ROL_SUPERVISOR, texto_del_reporte
+from utils.horario import MESES, a_hora_local, ahora_utc
 from utils.whatsapp import enviar_texto, firma_valida, token_de_verificacion_valido
 
 router = APIRouter(prefix="/webhooks/whatsapp", tags=["WhatsApp"])
@@ -41,11 +42,6 @@ INCIDENCIA_REGISTRADA = {
     "Permiso": "Registré tu solicitud de permiso.",
     "General": "Registré tu reporte.",
 }
-
-MESES = (
-    "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
-    "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-)  # fmt: skip
 
 
 # 1. VERIFICACIÓN DEL WEBHOOK (Meta la hace una vez al configurarlo)
@@ -96,10 +92,14 @@ def procesar_en_segundo_plano(mensaje: dict):
         db.close()
 
 
+def normalizar(texto: str) -> str:
+    # Quitar acentos y mayúsculas antes de buscar una palabra clave
+    sin_acentos = unicodedata.normalize("NFD", texto.lower())
+    return "".join(c for c in sin_acentos if unicodedata.category(c) != "Mn")
+
+
 def detectar_intencion(texto: str) -> Optional[str]:
-    # Quitar acentos y mayúsculas antes de buscar la palabra clave
-    normalizado = unicodedata.normalize("NFD", texto.lower())
-    normalizado = "".join(c for c in normalizado if unicodedata.category(c) != "Mn")
+    normalizado = normalizar(texto)
 
     if "entrada" in normalizado:
         return "entrada"
@@ -190,6 +190,12 @@ def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
     # 3. Responder según el tipo de mensaje.
     if tipo == "location":
         return fichar_con_ubicacion(mensaje, telefono, db)
+
+    # El supervisor puede pedir el reporte de su obra en cualquier momento.
+    if usuario.rol == ROL_SUPERVISOR and texto and "reporte" in normalizar(texto):
+        if usuario.obra is None:
+            return "No tienes una obra asignada."
+        return texto_del_reporte(db, usuario.obra, ahora_utc())
 
     if intencion:
         return (

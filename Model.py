@@ -11,6 +11,7 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     CheckConstraint,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 from Conexion_DB import Base
@@ -29,6 +30,8 @@ class Obra(Base):
     minutos_tolerancia = Column(Integer, default=20)
     activo = Column(Boolean, default=True)
     creado_en = Column(DateTime, default=ahora_utc)
+    # Día del último reporte matutino enviado; evita mandarlo dos veces
+    ultimo_reporte = Column(Date, nullable=True)
 
 
 class Usuario(Base):
@@ -77,6 +80,28 @@ class Asistencia(Base):
     # Relaciones ORM
     usuario = relationship("Usuario", backref="asistencias")
     obra = relationship("Obra", backref="asistencias")
+
+
+class Falta(Base):
+    # Día laborable en que el trabajador no registró ninguna entrada válida
+    __tablename__ = "faltas"
+    __table_args__ = (
+        UniqueConstraint("usuario_id", "fecha", name="faltas_usuario_fecha_key"),
+    )
+
+    id = Column(Integer, primary_key=True)
+    usuario_id = Column(
+        Integer, ForeignKey("usuarios.id", ondelete="RESTRICT"), nullable=False
+    )
+    obra_id = Column(
+        Integer, ForeignKey("obras.id", ondelete="RESTRICT"), nullable=False
+    )
+    fecha = Column(Date, nullable=False)
+    registrada_en = Column(DateTime, default=ahora_utc)
+
+    # Relaciones ORM
+    usuario = relationship("Usuario", backref="faltas")
+    obra = relationship("Obra", backref="faltas")
 
 
 class Incidencia(Base):

@@ -2,6 +2,7 @@ from datetime import datetime
 
 import Model as models
 from routers.asistencia import resumen_del_mes
+from tareas import registrar_faltas
 
 # Jueves 8 de octubre de 2026, 07:50 hora de México.
 AHORA = datetime(2026, 10, 8, 13, 50)
@@ -36,8 +37,10 @@ def test_resumen_del_mes(db, usuario):
     fichar(db, usuario, 2, "Salida registrada", tipo="salida", hora=23)
     fichar(db, usuario, 5, "Fuera de rango")
     fichar(db, usuario, 30, mes=9)
+    registrar_faltas(db, AHORA)
 
     # Días laborables antes de hoy: 1, 2, 3, 5, 6 y 7 (el 4 es domingo).
+    # Las faltas de septiembre existen, pero no entran en el resumen de octubre.
     assert resumen_del_mes(db, usuario, AHORA) == {
         "asistencias": 2,
         "retardos": 1,
@@ -45,13 +48,9 @@ def test_resumen_del_mes(db, usuario):
     }
 
 
-def test_las_faltas_se_cuentan_desde_el_alta_del_trabajador(db, usuario):
-    con_alta_el(db, usuario, 10, 6)
-    assert resumen_del_mes(db, usuario, AHORA)["faltas"] == 2
-
-
 def test_el_dia_de_hoy_cuenta_como_asistencia_pero_nunca_como_falta(db, usuario):
     con_alta_el(db, usuario, 10, 8)
+    registrar_faltas(db, AHORA)
     assert resumen_del_mes(db, usuario, AHORA)["faltas"] == 0
 
     fichar(db, usuario, 8, hora=13)
