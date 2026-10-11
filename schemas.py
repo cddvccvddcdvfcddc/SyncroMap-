@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime, date, time
-from typing import Optional
+from typing import Literal, Optional
 
 # ==========================================
 # 1. ESQUEMAS PARA OBRAS
@@ -113,6 +113,13 @@ class IncidenciaResponse(BaseModel):
     motivo_texto: str
     categoria: str
     prioridad: Optional[str] = None
+    confianza: Optional[float] = None
     estatus_revision: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class IncidenciaRevision(BaseModel):
+    # Lo que no se envía se confirma tal como lo propuso el clasificador.
+    categoria: Optional[Literal["Retardo", "Ausencia", "Permiso", "General"]] = None
+    prioridad: Optional[Literal["Alta", "Media", "Baja"]] = None

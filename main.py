@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import obras, usuarios, asistencia, whatsapp
+from routers import obras, usuarios, asistencia, incidencias, whatsapp
 
 # Las tablas se crean y modifican con Alembic: py -m alembic upgrade head
 
@@ -28,6 +28,7 @@ app.add_middleware(
 app.include_router(obras.router)
 app.include_router(usuarios.router)
 app.include_router(asistencia.router)
+app.include_router(incidencias.router)
 app.include_router(whatsapp.router)
 
 

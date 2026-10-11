@@ -12,7 +12,9 @@ from sqlalchemy.orm import Session
 import Model as models
 from Conexion_DB import SessionLocal
 from routers.asistencia import registrar_asistencia
+from routers.incidencias import guardar_incidencia
 from schemas import AsistenciaCreate
+from utils.clasificador import clasificar
 from utils.horario import a_hora_local, ahora_utc
 from utils.whatsapp import enviar_texto, firma_valida, token_de_verificacion_valido
 
@@ -22,10 +24,22 @@ logger = logging.getLogger("uvicorn.error")
 # Tiempo máximo entre escribir "entrada"/"salida" y compartir la ubicación.
 MINUTOS_PARA_UBICACION = 5
 
+# Un mensaje así de corto con "entrada" o "salida" siempre es un fichaje.
+PALABRAS_DE_UN_FICHAJE = 3
+
 AYUDA = (
     "Hola, soy SyncroMap. Escribe *entrada* o *salida* y después "
-    "comparte tu ubicación actual para registrar tu asistencia."
+    "comparte tu ubicación actual para registrar tu asistencia.\n\n"
+    "También puedes avisarme con tus palabras si vas a llegar tarde, "
+    "si no puedes presentarte, si necesitas un permiso o si pasó algo en la obra."
 )
+
+INCIDENCIA_REGISTRADA = {
+    "Retardo": "Registré tu aviso de retardo.",
+    "Ausencia": "Registré tu aviso de ausencia.",
+    "Permiso": "Registré tu solicitud de permiso.",
+    "General": "Registré tu reporte.",
+}
 
 
 # 1. VERIFICACIÓN DEL WEBHOOK (Meta la hace una vez al configurarlo)
@@ -88,6 +102,29 @@ def detectar_intencion(texto: str) -> Optional[str]:
     return None
 
 
+def interpretar(texto: str) -> tuple[Optional[str], bool]:
+    # Devuelve la intención de fichaje ('entrada', 'salida' o nada) y si el
+    # mensaje reporta una incidencia. "Voy a llegar tarde a la entrada" trae
+    # la palabra clave, pero es un aviso de retardo y no un fichaje.
+    intencion = detectar_intencion(texto)
+    if intencion and len(texto.split()) <= PALABRAS_DE_UN_FICHAJE:
+        return intencion, False
+
+    if clasificar(texto).es_incidencia:
+        return None, True
+    return intencion, False
+
+
+def responder_incidencia(usuario: models.Usuario, texto: str, db: Session) -> str:
+    incidencia = guardar_incidencia(db, usuario, texto)
+
+    respuesta = INCIDENCIA_REGISTRADA[incidencia.categoria]
+    respuesta += " Tu supervisor lo revisará."
+    if incidencia.prioridad == "Alta":
+        respuesta += " Si es una emergencia, llámale de inmediato."
+    return respuesta
+
+
 def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
     # Devuelve el texto con el que se le responde al trabajador.
     telefono = mensaje.get("from")
@@ -98,7 +135,7 @@ def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
         return None
 
     texto = mensaje.get("text", {}).get("body") if tipo == "text" else None
-    intencion = detectar_intencion(texto) if texto else None
+    intencion, es_incidencia = interpretar(texto) if texto else (None, False)
 
     # 1. Guardar el mensaje. Si ya existía, Meta lo reenvió y se ignora.
     try:
@@ -136,6 +173,9 @@ def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
             f"Para registrar tu {intencion}, comparte tu ubicación actual "
             "(clip > Ubicación > Enviar mi ubicación actual)."
         )
+
+    if es_incidencia:
+        return responder_incidencia(usuario, texto, db)
 
     return AYUDA
 

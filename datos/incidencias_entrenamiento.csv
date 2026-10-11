@@ -1,0 +1,327 @@
+texto,categoria,prioridad
+voy a llegar tarde hay mucho trafico,Retardo,Media
+se me hizo tarde llego en 20 minutos,Retardo,Media
+el camion no pasa voy retrasado,Retardo,Media
+jefe llego tarde hoy se poncho la llanta,Retardo,Media
+voy atrasado como media hora,Retardo,Media
+ando en el trafico llego como a las 9,Retardo,Media
+se descompuso la combi voy a llegar tarde,Retardo,Media
+me quede dormido ya voy para alla,Retardo,Media
+boy a yegar tarde ay trafico,Retardo,Media
+llego un poco tarde disculpe,Retardo,Media
+voy retrasado por la lluvia,Retardo,Media
+hay un bloqueo en la carretera voy a tardar,Retardo,Media
+no pasa el transporte llego mas tarde,Retardo,Media
+perdi el camion llego en una hora,Retardo,Media
+se me hizo tarde por dejar a mis hijos en la escuela,Retardo,Media
+buenos dias voy tarde hay manifestacion,Retardo,Media
+ya voy en camino pero llego tarde,Retardo,Media
+voy a llegar como 40 minutos tarde,Retardo,Media
+el metro esta detenido voy a llegar tarde,Retardo,Media
+se me poncho la bici llego al rato,Retardo,Media
+hoy llego tarde tuve que pasar a la farmacia,Retardo,Media
+ando atorado en el trafico de la autopista,Retardo,Media
+llego 15 min tarde,Retardo,Media
+disculpe el retraso ya casi llego,Retardo,Media
+no alcance el camion de las 6 llego tarde,Retardo,Media
+voy tarde se cayo un arbol en el camino,Retardo,Media
+el puente esta cerrado voy a tardar en llegar,Retardo,Media
+se inundo la calle voy a llegar retrasado,Retardo,Media
+voy a llegar tarde no arranco mi moto,Retardo,Media
+llegare tarde hoy tuve un contratiempo,Retardo,Media
+tantito tarde llego jefe,Retardo,Media
+ya mero llego voy atrasado,Retardo,Media
+se me fue el camion llego hasta las 8 y media,Retardo,Media
+me agarro el trafico en la caseta,Retardo,Media
+hoy voy a entrar mas tarde por el trafico,Retardo,Media
+llego tarde porque no habia gasolina,Retardo,Media
+voy demorado patron el camion se quedo tirado,Retardo,Media
+ai mucha fila en la caseta llego tarde,Retardo,Media
+se me paso la hora ya voy saliendo,Retardo,Media
+voy llegando tarde perdon,Retardo,Media
+mañana voy a llegar una hora tarde tengo que llevar a mi hijo a la escuela,Retardo,Baja
+el lunes llego tarde por una cita en el banco,Retardo,Baja
+le aviso que el jueves entro mas tarde tengo junta en la escuela,Retardo,Baja
+la proxima semana voy a llegar tarde el martes por un tramite,Retardo,Baja
+mañana llego como a las 10 tengo que recoger unos papeles,Retardo,Baja
+pasado mañana entro tarde tengo cita en el seguro,Retardo,Baja
+el viernes voy a llegar un poco tarde por la firma de boletas,Retardo,Baja
+aviso con tiempo que el miercoles llego tarde,Retardo,Baja
+mañana llegare tarde voy a dejar mi carro al taller,Retardo,Baja
+el sabado llego mas tarde tengo que ir al registro civil,Retardo,Baja
+voy a llegar tarde choque en la carretera,Retardo,Alta
+tuve un accidente en la moto voy a tardar estoy bien,Retardo,Alta
+voy tarde me atropellaron la bici me duele la pierna,Retardo,Alta
+chocaron el camion donde venia voy a llegar tarde hay heridos,Retardo,Alta
+me asaltaron en el camion voy a llegar tarde,Retardo,Alta
+voy tarde me cai de la moto y me lastime el brazo,Retardo,Alta
+llego tarde hubo un choque y me golpee la cabeza,Retardo,Alta
+se volteo la combi donde venia voy a tardar,Retardo,Alta
+hoy no voy a poder ir estoy enfermo,Ausencia,Media
+no voy a ir a trabajar tengo fiebre,Ausencia,Media
+no me presento hoy me siento mal,Ausencia,Media
+jefe hoy no voy amaneci con gripa,Ausencia,Media
+estoy enfermo del estomago no puedo ir,Ausencia,Media
+hoy falto tengo mucha tos y calentura,Ausencia,Media
+no voy a poder asistir hoy,Ausencia,Media
+no llego hoy tengo diarrea,Ausencia,Media
+no puedo ir a trabajar mi hijo esta enfermo,Ausencia,Media
+hoy no asisto me duele mucho la muela,Ausencia,Media
+no boy a ir oy estoy malo,Ausencia,Media
+me siento muy mal no voy a ir,Ausencia,Media
+no puedo presentarme tengo que cuidar a mi mama,Ausencia,Media
+hoy no voy no tengo quien cuide a mis hijos,Ausencia,Media
+amaneci con vomito no voy a ir a la obra,Ausencia,Media
+no voy a trabajar hoy tengo migraña,Ausencia,Media
+falto hoy por enfermedad,Ausencia,Media
+hoy no me presento tengo dolor de espalda,Ausencia,Media
+no puedo ir hoy no tengo para el pasaje,Ausencia,Media
+no voy a ir se descompuso mi carro y no tengo como llegar,Ausencia,Media
+estoy malo de la garganta hoy no voy,Ausencia,Media
+hoy no asistire tengo covid,Ausencia,Media
+no ire a trabajar hoy disculpe,Ausencia,Media
+hoy voy a faltar me siento mal,Ausencia,Media
+no llegare hoy tengo infeccion en el estomago,Ausencia,Media
+no voy hoy patron ando enfermo,Ausencia,Media
+tengo temperatura no voy a ir a trabajar,Ausencia,Media
+no podre ir hoy tengo un problema personal,Ausencia,Media
+hoy no voy a la obra se enfermo mi esposa,Ausencia,Media
+falto el dia de hoy por un asunto familiar,Ausencia,Media
+me enferme anoche no voy a poder presentarme,Ausencia,Media
+no fui ayer porque estaba enfermo,Ausencia,Media
+ayer falte porque me senti mal,Ausencia,Media
+hoy descanso por enfermedad no voy,Ausencia,Media
+no voy a trabajar hoy y mañana estoy con gripe,Ausencia,Media
+no voy a ir estoy en el hospital,Ausencia,Alta
+fallecio mi papa no voy a poder ir,Ausencia,Alta
+internaron a mi hijo no puedo ir a trabajar,Ausencia,Alta
+tuve un accidente no voy a poder ir a trabajar,Ausencia,Alta
+estoy hospitalizado no voy a presentarme,Ausencia,Alta
+murio mi abuela no voy a ir estos dias,Ausencia,Alta
+me operaron de urgencia no voy a ir,Ausencia,Alta
+no voy a ir me fracture el pie,Ausencia,Alta
+mi esposa esta en urgencias no puedo ir,Ausencia,Alta
+no puedo ir se quemo mi casa,Ausencia,Alta
+no voy a ir tuve un accidente en la carretera estoy en la cruz roja,Ausencia,Alta
+se murio un familiar no me presento hoy,Ausencia,Alta
+estoy en urgencias con mi mama no voy a ir,Ausencia,Alta
+no voy me lastime la espalda y no puedo caminar,Ausencia,Alta
+me asaltaron y me golpearon no puedo ir a trabajar,Ausencia,Alta
+mañana no voy a ir tengo que hacer un tramite,Ausencia,Baja
+el lunes no me presento tengo cita medica,Ausencia,Baja
+la proxima semana no voy a trabajar el miercoles,Ausencia,Baja
+aviso que el viernes voy a faltar,Ausencia,Baja
+pasado mañana no voy tengo que ir a mi pueblo,Ausencia,Baja
+el sabado no voy a ir es la fiesta de mi hija,Ausencia,Baja
+no voy a ir el martes tengo cita en el imss,Ausencia,Baja
+mañana falto por un asunto personal,Ausencia,Baja
+el jueves no asisto tengo que ir al juzgado,Ausencia,Baja
+la otra semana voy a faltar dos dias,Ausencia,Baja
+mañana no me presento voy a renovar mi licencia,Ausencia,Baja
+no voy a poder ir el dia 15 tengo cita,Ausencia,Baja
+el proximo lunes voy a faltar por un compromiso,Ausencia,Baja
+aviso que no voy a ir el fin de semana,Ausencia,Baja
+quiero pedir permiso para el viernes,Permiso,Baja
+necesito permiso para faltar el lunes tengo cita medica,Permiso,Baja
+me puede dar permiso para ir a una cita la proxima semana,Permiso,Baja
+solicito permiso para el dia 20,Permiso,Baja
+ocupo un permiso para mañana tengo que ir al banco,Permiso,Baja
+quisiera pedir el dia jueves por un tramite,Permiso,Baja
+me da permiso de faltar el sabado,Permiso,Baja
+necesito un dia de permiso la otra semana,Permiso,Baja
+puedo pedir permiso para el miercoles es la graduacion de mi hijo,Permiso,Baja
+quiero pedir vacaciones para diciembre,Permiso,Baja
+me dan chance de faltar mañana,Permiso,Baja
+solicito permiso sin goce de sueldo para el viernes,Permiso,Baja
+necesito permiso para ir al imss el martes,Permiso,Baja
+quiero pedir dos dias de permiso la proxima semana,Permiso,Baja
+me autoriza faltar el lunes tengo que ir a mi pueblo,Permiso,Baja
+puedo salir temprano el viernes tengo una cita,Permiso,Baja
+quiero permiso para salir a las 2 mañana,Permiso,Baja
+me da permiso de llegar tarde el jueves,Permiso,Baja
+necesito pedir un dia para arreglar mis papeles,Permiso,Baja
+quisiera solicitar mis vacaciones,Permiso,Baja
+me puede dar el dia de mañana,Permiso,Baja
+ocupo permiso el lunes para llevar a mi esposa al doctor,Permiso,Baja
+solicito permiso para ausentarme el dia 5,Permiso,Baja
+pido permiso para la proxima semana por la boda de mi hermano,Permiso,Baja
+me permite faltar pasado mañana,Permiso,Baja
+quiero pedir permiso el sabado para un evento familiar,Permiso,Baja
+necesito permiso mañana para ir a la escuela de mi hijo,Permiso,Baja
+podria darme permiso el viernes en la tarde,Permiso,Baja
+permiso para faltar el martes por favor,Permiso,Baja
+kiero pedir permizo para el lunes,Permiso,Baja
+me da permiso de salir temprano hoy,Permiso,Media
+necesito salir a las 3 hoy tengo cita con el doctor,Permiso,Media
+puedo retirarme antes hoy,Permiso,Media
+ocupo permiso para salir un rato hoy,Permiso,Media
+me deja salir temprano tengo que recoger a mi hija,Permiso,Media
+pido permiso para salir una hora hoy a hacer un pago,Permiso,Media
+necesito permiso hoy para ir al banco regreso rapido,Permiso,Media
+me puedo ir temprano hoy me siento mal,Permiso,Media
+puedo salir a comer mas tarde hoy tengo un pendiente,Permiso,Media
+me da chance de irme a medio dia hoy,Permiso,Media
+necesito permiso para retirarme ahorita no me siento bien,Permiso,Media
+puedo salir antes hoy tengo que ir por mis hijos,Permiso,Media
+solicito permiso para salir dos horas hoy,Permiso,Media
+me permite salir temprano el dia de hoy,Permiso,Media
+ocupo salir un momento a la farmacia,Permiso,Media
+necesito permiso urgente internaron a mi hijo,Permiso,Alta
+tengo que irme ya es una emergencia familiar,Permiso,Alta
+necesito salir ahorita mi esposa tuvo un accidente,Permiso,Alta
+pido permiso urgente fallecio un familiar,Permiso,Alta
+me tengo que ir de urgencia mi mama esta grave,Permiso,Alta
+necesito permiso ya mi hijo se accidento en la escuela,Permiso,Alta
+ocupo irme urgente se esta quemando mi casa,Permiso,Alta
+permiso urgente tengo que llevar a mi papa al hospital,Permiso,Alta
+tengo que salir de emergencia mi esposa va a dar a luz,Permiso,Alta
+me hablaron que mi hijo esta en urgencias necesito irme,Permiso,Alta
+me cai del andamio,General,Alta
+se accidento un compañero en la obra,General,Alta
+me corte la mano con el esmeril,General,Alta
+hay una fuga de gas en la obra,General,Alta
+se cayo un compañero de la escalera,General,Alta
+me lastime el pie con una viga,General,Alta
+hubo un accidente en la obra necesitamos ayuda,General,Alta
+el andamio esta flojo y se puede caer,General,Alta
+hay un cable pelado que esta dando toques,General,Alta
+me entro rebaba en el ojo,General,Alta
+se desmayo un compañero,General,Alta
+hay un incendio en la bodega,General,Alta
+me machuque el dedo con el martillo,General,Alta
+un compañero se electrocuto,General,Alta
+se cayo una barda casi le cae a un compañero,General,Alta
+me golpee la cabeza con un tubo,General,Alta
+hay una pelea entre dos trabajadores,General,Alta
+se esta derrumbando la zanja,General,Alta
+me queme con la soldadura,General,Alta
+un compañero llego borracho y esta operando la maquina,General,Alta
+se rompio la eslinga con la carga arriba,General,Alta
+me cayo cemento en los ojos,General,Alta
+hay olor a gas muy fuerte,General,Alta
+se volteo la revolvedora y le pego a uno,General,Alta
+me pique con una varilla y estoy sangrando,General,Alta
+la grua esta fallando con carga,General,Alta
+se cayo material del segundo piso,General,Alta
+hay un corto en el tablero y esta echando chispas,General,Alta
+me torci el tobillo y no puedo pisar,General,Alta
+robaron la herramienta de la bodega,General,Alta
+no hay material para trabajar,General,Media
+se acabo el cemento,General,Media
+no tenemos herramienta,General,Media
+no llego la varilla que pidieron,General,Media
+no me dieron casco,General,Media
+me faltan guantes y lentes,General,Media
+se descompuso la cortadora,General,Media
+no hay agua en la obra,General,Media
+no sirve la revolvedora,General,Media
+no hay luz en la obra no podemos trabajar,General,Media
+no han llegado los planos,General,Media
+el arnes que me dieron esta roto,General,Media
+se termino el gas de soldar,General,Media
+no puedo mandar mi ubicacion,General,Media
+no me deja registrar la entrada el bot,General,Media
+no tengo datos para mandar la ubicacion,General,Media
+me marco fuera de rango pero si estoy en la obra,General,Media
+se me olvido registrar mi entrada en la mañana,General,Media
+no pude marcar mi salida ayer,General,Media
+el encargado no ha llegado y no podemos entrar,General,Media
+esta cerrada la obra no hay quien abra,General,Media
+no hay andamios suficientes,General,Media
+esta lloviendo mucho y no se puede colar,General,Media
+no nos han traido el material desde ayer,General,Media
+la planta de luz no prende,General,Media
+faltan botas de seguridad para los nuevos,General,Media
+me cambiaron de obra y no me avisaron a cual,General,Media
+se poncho la llanta de la camioneta de la obra,General,Media
+no funciona el taladro,General,Media
+cuando pagan la quincena,General,Baja
+no me ha llegado mi pago,General,Baja
+me pagaron menos esta semana,General,Baja
+cambie de numero de telefono,General,Baja
+necesito una constancia de trabajo,General,Baja
+me pueden dar mi recibo de nomina,General,Baja
+quiero saber cuando me dan mi aguinaldo,General,Baja
+me falto el pago de horas extra,General,Baja
+necesito una carta para el banco,General,Baja
+quiero actualizar mi direccion,General,Baja
+a que hora es la entrada mañana,General,Baja
+en que obra me toca la proxima semana,General,Baja
+perdi mi credencial,General,Baja
+necesito mi numero de seguro social,General,Baja
+quiero saber si ya me dieron de alta en el imss,General,Baja
+me deben un dia de la semana pasada,General,Baja
+cuando nos dan uniformes nuevos,General,Baja
+quiero cambiar mi cuenta para el deposito,General,Baja
+me pueden mandar mi comprobante de pago,General,Baja
+tengo una duda sobre mi sueldo,General,Baja
+hola,Ninguna,
+buenos dias,Ninguna,
+buenas tardes,Ninguna,
+buenas noches,Ninguna,
+gracias,Ninguna,
+muchas gracias,Ninguna,
+ok,Ninguna,
+okey,Ninguna,
+si,Ninguna,
+no,Ninguna,
+ya,Ninguna,
+listo,Ninguna,
+entendido,Ninguna,
+de acuerdo,Ninguna,
+va,Ninguna,
+sale,Ninguna,
+hola buenos dias,Ninguna,
+que tal,Ninguna,
+buen dia jefe,Ninguna,
+entrada,Ninguna,
+salida,Ninguna,
+registrar entrada,Ninguna,
+registrar salida,Ninguna,
+quiero registrar mi entrada,Ninguna,
+quiero marcar mi salida,Ninguna,
+marcar entrada,Ninguna,
+voy a registrar mi salida,Ninguna,
+entrada por favor,Ninguna,
+ya llegue registra mi entrada,Ninguna,
+ya me voy registra mi salida,Ninguna,
+mi entrada,Ninguna,
+mi salida,Ninguna,
+checar entrada,Ninguna,
+checar salida,Ninguna,
+fichar entrada,Ninguna,
+ya llegue,Ninguna,
+ya entre,Ninguna,
+ya sali,Ninguna,
+ya estoy en la obra,Ninguna,
+prueba,Ninguna,
+probando,Ninguna,
+hola soy juan,Ninguna,
+quien eres,Ninguna,
+que haces,Ninguna,
+como funciona esto,Ninguna,
+ayuda,Ninguna,
+menu,Ninguna,
+que puedo hacer aqui,Ninguna,
+cuantos retardos llevo,Ninguna,
+cuantas faltas tengo,Ninguna,
+cuantas asistencias llevo,Ninguna,
+cuantos retardos tengo este mes,Ninguna,
+quiero saber mis faltas,Ninguna,
+cuantas veces he llegado tarde,Ninguna,
+dime mis asistencias,Ninguna,
+jajaja,Ninguna,
+feliz cumpleaños,Ninguna,
+nos vemos mañana,Ninguna,
+hasta luego,Ninguna,
+bendiciones,Ninguna,
+igualmente,Ninguna,
+perfecto gracias,Ninguna,
+esta bien,Ninguna,
+ahi nos vemos,Ninguna,
+buen fin de semana,Ninguna,
+ya quedo,Ninguna,
+enterado,Ninguna,
+como estas,Ninguna,
+ya comi,Ninguna,
+bonito dia,Ninguna,

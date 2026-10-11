@@ -98,7 +98,11 @@ class Incidencia(Base):
         String(50), default="General"
     )  # tipo de incidencia: 'Retardo', 'Ausencia', 'Permiso', 'General'
     prioridad = Column(String(10), nullable=True)  # 'Alta', 'Media', 'Baja'
-    estatus_revision = Column(String(20), default="Pendiente")
+    # Qué tan seguro estuvo el clasificador (de 0 a 1); vacío si la capturó una persona
+    confianza = Column(Float, nullable=True)
+    estatus_revision = Column(
+        String(20), default="Pendiente"
+    )  # 'Pendiente', 'Ambigua', 'Revisada'
 
     # Relación ORM
     usuario = relationship("Usuario", backref="incidencias")

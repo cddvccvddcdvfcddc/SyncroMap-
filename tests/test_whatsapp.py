@@ -189,6 +189,66 @@ def test_mensaje_que_no_se_entiende_recibe_ayuda(chat):
     assert chat.texto("hola") == whatsapp.AYUDA
 
 
+# ---------- Incidencias en texto libre ----------
+
+
+def test_aviso_de_retardo_en_texto_libre(chat, db):
+    respuesta = chat.texto("voy a llegar tarde, hay tráfico")
+
+    assert respuesta == "Registré tu aviso de retardo. Tu supervisor lo revisará."
+    incidencia = db.query(models.Incidencia).one()
+    assert incidencia.motivo_texto == "voy a llegar tarde, hay tráfico"
+    assert (incidencia.categoria, incidencia.prioridad) == ("Retardo", "Media")
+
+
+def test_aviso_de_ausencia_en_texto_libre(chat, db):
+    assert chat.texto("estoy enfermo, hoy no voy a ir").startswith(
+        "Registré tu aviso de ausencia."
+    )
+    assert db.query(models.Incidencia).one().categoria == "Ausencia"
+
+
+def test_incidencia_de_prioridad_alta_pide_llamar_al_supervisor(chat, db):
+    respuesta = chat.texto("un compañero se cortó con la sierra")
+
+    assert respuesta.endswith("Si es una emergencia, llámale de inmediato.")
+    assert db.query(models.Incidencia).one().prioridad == "Alta"
+
+
+def test_un_aviso_que_menciona_la_entrada_no_es_un_fichaje(chat, db):
+    respuesta = chat.texto("voy a llegar tarde a la entrada porque hay trafico")
+
+    assert respuesta.startswith("Registré tu aviso de retardo.")
+    # La ubicación que llegue después no debe convertirse en un fichaje.
+    assert "Primero escribe" in chat.ubicacion()
+    assert db.query(models.Asistencia).count() == 0
+
+
+def test_un_saludo_o_un_fichaje_no_generan_incidencia(chat, db):
+    chat.texto("hola")
+    chat.texto("gracias")
+    chat.texto("quiero registrar mi entrada")
+
+    assert db.query(models.Incidencia).count() == 0
+
+
+def test_fichaje_escrito_con_una_frase_larga(chat):
+    assert "comparte tu ubicación" in chat.texto("quiero registrar mi entrada")
+    assert chat.ubicacion().startswith("Entrada registrada")
+
+
+def test_un_numero_no_registrado_no_genera_incidencia(chat, db):
+    chat.enviar(**{"from": "5210000000000"}, type="text", text={"body": "estoy enfermo"})
+    assert db.query(models.Incidencia).count() == 0
+
+
+def test_incidencia_repetida_por_meta_se_guarda_una_sola_vez(chat, db):
+    mensaje = {"id": "wamid.aviso", "type": "text", "text": {"body": "estoy enfermo"}}
+    chat.enviar(**mensaje)
+    chat.enviar(**mensaje)
+    assert db.query(models.Incidencia).count() == 1
+
+
 @pytest.mark.parametrize(
     "texto, esperado",
     [
