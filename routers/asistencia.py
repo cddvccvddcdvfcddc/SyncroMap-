@@ -1,4 +1,5 @@
 import math
+from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
@@ -8,11 +9,20 @@ import Model as models
 from Conexion_DB import get_db
 from schemas import AsistenciaCreate, AsistenciaResponse
 from utils.haversine import calcular_distancia
-from utils.horario import ahora_utc, estatus_de_entrada, limites_del_dia_utc
+from utils.horario import (
+    a_hora_local,
+    ahora_utc,
+    estatus_de_entrada,
+    inicio_del_mes_utc,
+    limites_del_dia_utc,
+)
 
 router = APIRouter(prefix="/asistencia", tags=["Asistencia"])
 
 FUERA_DE_RANGO = "Fuera de rango"
+
+# Días en que se espera al trabajador: de lunes (0) a sábado (5).
+DIAS_LABORABLES = (0, 1, 2, 3, 4, 5)
 
 
 def buscar_fichaje_del_dia(db: Session, usuario_id: int, tipo: str, ahora):
@@ -29,6 +39,40 @@ def buscar_fichaje_del_dia(db: Session, usuario_id: int, tipo: str, ahora):
         )
         .first()
     )
+
+
+def resumen_del_mes(db: Session, usuario: models.Usuario, ahora) -> dict:
+    # Asistencias, retardos y faltas del trabajador en el mes en curso.
+    entradas = (
+        db.query(models.Asistencia)
+        .filter(
+            models.Asistencia.usuario_id == usuario.id,
+            models.Asistencia.tipo == "entrada",
+            models.Asistencia.estatus_asistencia != FUERA_DE_RANGO,
+            models.Asistencia.fecha_hora_fichaje >= inicio_del_mes_utc(ahora),
+        )
+        .all()
+    )
+    dias_con_entrada = {a_hora_local(e.fecha_hora_fichaje).date() for e in entradas}
+
+    # Falta: día laborable sin entrada, desde el inicio del mes (o desde el
+    # alta del trabajador) hasta ayer. El día de hoy todavía no termina.
+    hoy = a_hora_local(ahora).date()
+    dia = hoy.replace(day=1)
+    if usuario.creado_en is not None:
+        dia = max(dia, a_hora_local(usuario.creado_en).date())
+
+    faltas = 0
+    while dia < hoy:
+        if dia.weekday() in DIAS_LABORABLES and dia not in dias_con_entrada:
+            faltas += 1
+        dia += timedelta(days=1)
+
+    return {
+        "asistencias": len(dias_con_entrada),
+        "retardos": sum(e.estatus_asistencia == "Retardo" for e in entradas),
+        "faltas": faltas,
+    }
 
 
 @router.post("/fichar", response_model=AsistenciaResponse, status_code=201)

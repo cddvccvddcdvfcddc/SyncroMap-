@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 import Model as models
 from Conexion_DB import SessionLocal
-from routers.asistencia import registrar_asistencia
+from routers.asistencia import registrar_asistencia, resumen_del_mes
 from routers.incidencias import guardar_incidencia
 from schemas import AsistenciaCreate
 from utils.clasificador import clasificar
@@ -31,7 +31,8 @@ AYUDA = (
     "Hola, soy SyncroMap. Escribe *entrada* o *salida* y después "
     "comparte tu ubicación actual para registrar tu asistencia.\n\n"
     "También puedes avisarme con tus palabras si vas a llegar tarde, "
-    "si no puedes presentarte, si necesitas un permiso o si pasó algo en la obra."
+    "si no puedes presentarte, si necesitas un permiso o si pasó algo en la obra. "
+    "Y puedes preguntarme cuántas asistencias, retardos o faltas llevas."
 )
 
 INCIDENCIA_REGISTRADA = {
@@ -40,6 +41,11 @@ INCIDENCIA_REGISTRADA = {
     "Permiso": "Registré tu solicitud de permiso.",
     "General": "Registré tu reporte.",
 }
+
+MESES = (
+    "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+    "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+)  # fmt: skip
 
 
 # 1. VERIFICACIÓN DEL WEBHOOK (Meta la hace una vez al configurarlo)
@@ -102,17 +108,20 @@ def detectar_intencion(texto: str) -> Optional[str]:
     return None
 
 
-def interpretar(texto: str) -> tuple[Optional[str], bool]:
-    # Devuelve la intención de fichaje ('entrada', 'salida' o nada) y si el
-    # mensaje reporta una incidencia. "Voy a llegar tarde a la entrada" trae
-    # la palabra clave, pero es un aviso de retardo y no un fichaje.
-    intencion = detectar_intencion(texto)
-    if intencion and len(texto.split()) <= PALABRAS_DE_UN_FICHAJE:
-        return intencion, False
+def interpretar(texto: str) -> Optional[str]:
+    # Devuelve qué quiere el trabajador: 'entrada', 'salida', 'incidencia',
+    # 'consulta' o nada. "Voy a llegar tarde a la entrada" trae la palabra
+    # clave, pero es un aviso de retardo y no un fichaje.
+    fichaje = detectar_intencion(texto)
+    if fichaje and len(texto.split()) <= PALABRAS_DE_UN_FICHAJE:
+        return fichaje
 
-    if clasificar(texto).es_incidencia:
-        return None, True
-    return intencion, False
+    propuesta = clasificar(texto)
+    if propuesta.es_incidencia:
+        return "incidencia"
+    if propuesta.es_consulta:
+        return "consulta"
+    return fichaje
 
 
 def responder_incidencia(usuario: models.Usuario, texto: str, db: Session) -> str:
@@ -125,6 +134,18 @@ def responder_incidencia(usuario: models.Usuario, texto: str, db: Session) -> st
     return respuesta
 
 
+def responder_consulta(usuario: models.Usuario, db: Session) -> str:
+    ahora = ahora_utc()
+    resumen = resumen_del_mes(db, usuario, ahora)
+    mes = MESES[a_hora_local(ahora).month - 1]
+    return (
+        f"Tu resumen de {mes}:\n"
+        f"Asistencias: {resumen['asistencias']}\n"
+        f"Retardos: {resumen['retardos']}\n"
+        f"Faltas: {resumen['faltas']}"
+    )
+
+
 def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
     # Devuelve el texto con el que se le responde al trabajador.
     telefono = mensaje.get("from")
@@ -135,7 +156,9 @@ def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
         return None
 
     texto = mensaje.get("text", {}).get("body") if tipo == "text" else None
-    intencion, es_incidencia = interpretar(texto) if texto else (None, False)
+    accion = interpretar(texto) if texto else None
+    # Solo un fichaje pendiente queda esperando la ubicación.
+    intencion = accion if accion in ("entrada", "salida") else None
 
     # 1. Guardar el mensaje. Si ya existía, Meta lo reenvió y se ignora.
     try:
@@ -174,8 +197,11 @@ def procesar_mensaje(mensaje: dict, db: Session) -> Optional[str]:
             "(clip > Ubicación > Enviar mi ubicación actual)."
         )
 
-    if es_incidencia:
+    if accion == "incidencia":
         return responder_incidencia(usuario, texto, db)
+
+    if accion == "consulta":
+        return responder_consulta(usuario, db)
 
     return AYUDA
 

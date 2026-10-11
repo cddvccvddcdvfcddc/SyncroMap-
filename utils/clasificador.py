@@ -13,8 +13,11 @@ RUTA_EJEMPLOS = (
     Path(__file__).resolve().parent.parent / "datos" / "incidencias_entrenamiento.csv"
 )
 
-# Categoría de los mensajes que no reportan nada: saludos, "entrada", consultas.
+# Categoría de los mensajes que no reportan nada: saludos, "entrada", "gracias".
 SIN_INCIDENCIA = "Ninguna"
+
+# Categoría de las preguntas sobre el propio historial ("¿cuántos retardos llevo?").
+CONSULTA = "Consulta"
 
 # Por debajo de esta confianza la clasificación queda marcada para revisión humana.
 CONFIANZA_MINIMA = 0.6
@@ -22,13 +25,18 @@ CONFIANZA_MINIMA = 0.6
 
 @dataclass(frozen=True)
 class Clasificacion:
-    categoria: str  # 'Retardo', 'Ausencia', 'Permiso', 'General' o 'Ninguna'
+    # 'Retardo', 'Ausencia', 'Permiso', 'General', 'Consulta' o 'Ninguna'
+    categoria: str
     prioridad: str  # 'Alta', 'Media' o 'Baja'
     confianza: float  # de 0 a 1
 
     @property
     def es_incidencia(self) -> bool:
-        return self.categoria != SIN_INCIDENCIA
+        return self.categoria not in (SIN_INCIDENCIA, CONSULTA)
+
+    @property
+    def es_consulta(self) -> bool:
+        return self.categoria == CONSULTA
 
     @property
     def ambigua(self) -> bool:
@@ -59,7 +67,8 @@ def nuevo_modelo() -> Pipeline:
 def modelos() -> tuple[Pipeline, Pipeline]:
     # Se entrenan una sola vez, la primera vez que se clasifica un mensaje.
     ejemplos = leer_ejemplos()
-    incidencias = [e for e in ejemplos if e["categoria"] != SIN_INCIDENCIA]
+    # Solo las incidencias tienen prioridad; los saludos y las consultas no.
+    incidencias = [e for e in ejemplos if e["prioridad"]]
 
     de_categoria = nuevo_modelo().fit(
         [e["texto"] for e in ejemplos], [e["categoria"] for e in ejemplos]
@@ -81,7 +90,7 @@ def clasificar(texto: str) -> Clasificacion:
     categoria, confianza_categoria = _predecir(de_categoria, texto)
     prioridad, confianza_prioridad = _predecir(de_prioridad, texto)
 
-    if categoria == SIN_INCIDENCIA:
+    if categoria in (SIN_INCIDENCIA, CONSULTA):
         return Clasificacion(categoria, prioridad, confianza_categoria)
 
     # Basta con que una de las dos respuestas sea dudosa para pedir revisión.
@@ -96,7 +105,7 @@ def evaluar(particiones: int = 5) -> None:
     from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
     ejemplos = leer_ejemplos()
-    incidencias = [e for e in ejemplos if e["categoria"] != SIN_INCIDENCIA]
+    incidencias = [e for e in ejemplos if e["prioridad"]]
     corte = StratifiedKFold(particiones, shuffle=True, random_state=0)
 
     for titulo, datos, columna in (

@@ -2,13 +2,14 @@ import pytest
 
 from utils.clasificador import (
     CONFIANZA_MINIMA,
+    CONSULTA,
     SIN_INCIDENCIA,
     Clasificacion,
     clasificar,
     leer_ejemplos,
 )
 
-CATEGORIAS = {"Retardo", "Ausencia", "Permiso", "General", SIN_INCIDENCIA}
+CATEGORIAS = {"Retardo", "Ausencia", "Permiso", "General", CONSULTA, SIN_INCIDENCIA}
 PRIORIDADES = {"Alta", "Media", "Baja"}
 
 
@@ -40,6 +41,21 @@ def test_lo_que_no_es_incidencia(texto):
     assert not clasificar(texto).es_incidencia
 
 
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "cuántos retardos llevo?",
+        "cuántas faltas llevo este mes?",
+        "me dices cuantas asistencias tengo",
+        "quiero saber cuantas veces he faltado",
+    ],
+)
+def test_reconoce_las_consultas(texto):
+    resultado = clasificar(texto)
+    assert resultado.es_consulta
+    assert not resultado.es_incidencia
+
+
 def test_la_confianza_baja_marca_la_clasificacion_como_ambigua():
     assert Clasificacion("Retardo", "Media", CONFIANZA_MINIMA - 0.01).ambigua
     assert not Clasificacion("Retardo", "Media", CONFIANZA_MINIMA).ambigua
@@ -49,7 +65,7 @@ def test_los_ejemplos_de_entrenamiento_estan_bien_etiquetados():
     for ejemplo in leer_ejemplos():
         assert ejemplo["texto"].strip()
         assert ejemplo["categoria"] in CATEGORIAS
-        if ejemplo["categoria"] == SIN_INCIDENCIA:
+        if ejemplo["categoria"] in (SIN_INCIDENCIA, CONSULTA):
             assert ejemplo["prioridad"] == ""
         else:
             assert ejemplo["prioridad"] in PRIORIDADES

@@ -249,6 +249,33 @@ def test_incidencia_repetida_por_meta_se_guarda_una_sola_vez(chat, db):
     assert db.query(models.Incidencia).count() == 1
 
 
+# ---------- Consultas ----------
+
+
+def test_consulta_sin_asistencias(chat):
+    assert chat.texto("cuántas faltas llevo?") == (
+        "Tu resumen de octubre:\nAsistencias: 0\nRetardos: 0\nFaltas: 0"
+    )
+
+
+def test_consulta_despues_de_fichar_con_retardo(chat):
+    chat.esperar(60)
+    chat.texto("entrada")
+    chat.ubicacion()
+
+    respuesta = chat.texto("cuantos retardos tengo")
+
+    assert "Asistencias: 1" in respuesta
+    assert "Retardos: 1" in respuesta
+
+
+def test_una_consulta_no_genera_incidencia_ni_fichaje(chat, db):
+    chat.texto("cuántos retardos llevo?")
+
+    assert db.query(models.Incidencia).count() == 0
+    assert "Primero escribe" in chat.ubicacion()
+
+
 @pytest.mark.parametrize(
     "texto, esperado",
     [

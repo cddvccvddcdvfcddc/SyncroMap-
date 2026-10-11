@@ -30,6 +30,14 @@ def limites_del_dia_utc(fecha_utc: datetime) -> tuple[datetime, datetime]:
     return inicio, fin
 
 
+def inicio_del_mes_utc(fecha_utc: datetime) -> datetime:
+    # Primer instante (en UTC) del mes local al que pertenece la fecha
+    inicio_local = a_hora_local(fecha_utc).replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
+    return inicio_local.astimezone(timezone.utc).replace(tzinfo=None)
+
+
 def estatus_de_entrada(
     fecha_utc: datetime,
     hora_entrada: time,
