@@ -102,3 +102,17 @@ class Incidencia(Base):
 
     # Relación ORM
     usuario = relationship("Usuario", backref="incidencias")
+
+
+class MensajeWhatsapp(Base):
+    __tablename__ = "mensajes_whatsapp"
+    __table_args__ = (Index("idx_mensajes_whatsapp_telefono", "telefono"),)
+
+    id = Column(Integer, primary_key=True)
+    # Identificador que asigna WhatsApp; evita procesar dos veces el mismo mensaje
+    wa_message_id = Column(String(100), unique=True, nullable=False)
+    telefono = Column(String(20), nullable=False)
+    tipo = Column(String(20), nullable=False)  # 'text', 'location', etc.
+    texto = Column(Text, nullable=True)
+    intencion = Column(String(20), nullable=True)  # 'entrada' o 'salida'
+    recibido_en = Column(DateTime, default=ahora_utc, nullable=False)

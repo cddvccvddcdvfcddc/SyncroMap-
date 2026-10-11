@@ -3,6 +3,12 @@ import os
 # Las pruebas usan SQLite en memoria; nunca tocan la base de PostgreSQL.
 os.environ["DATABASE_URL"] = "sqlite://"
 
+# Valores ficticios: las pruebas tampoco usan la cuenta real de WhatsApp.
+os.environ["WHATSAPP_APP_SECRET"] = "secreto-de-prueba"
+os.environ["WHATSAPP_VERIFY_TOKEN"] = "token-de-prueba"
+os.environ["WHATSAPP_TOKEN"] = "sin-token"
+os.environ["WHATSAPP_PHONE_ID"] = "0"
+
 from datetime import time
 
 import pytest
