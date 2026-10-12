@@ -92,6 +92,15 @@ class AsistenciaResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class FaltaResponse(BaseModel):
+    id: int
+    usuario_id: int
+    obra_id: int
+    fecha: date
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================
 # 4. ESQUEMAS PARA INCIDENCIAS (NLP / Justificantes)
 # ==========================================

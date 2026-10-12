@@ -1,3 +1,4 @@
+from datetime import date
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -59,9 +60,15 @@ def listar_incidencias(
     prioridad: Optional[str] = None,
     estatus_revision: Optional[str] = None,
     usuario_id: Optional[int] = None,
+    desde: Optional[date] = None,
+    hasta: Optional[date] = None,
     db: Session = Depends(get_db),
 ):
     consulta = db.query(models.Incidencia)
+    if desde is not None:
+        consulta = consulta.filter(models.Incidencia.fecha >= desde)
+    if hasta is not None:
+        consulta = consulta.filter(models.Incidencia.fecha <= hasta)
     if prioridad is not None:
         consulta = consulta.filter(models.Incidencia.prioridad == prioridad)
     if estatus_revision is not None:

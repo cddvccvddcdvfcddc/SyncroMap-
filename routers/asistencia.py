@@ -1,4 +1,6 @@
 import math
+from datetime import date, timedelta
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
@@ -6,12 +8,13 @@ from sqlalchemy.orm import Session
 
 import Model as models
 from Conexion_DB import get_db
-from schemas import AsistenciaCreate, AsistenciaResponse
+from schemas import AsistenciaCreate, AsistenciaResponse, FaltaResponse
 from utils.haversine import calcular_distancia
 from utils.horario import (
     a_hora_local,
     ahora_utc,
     estatus_de_entrada,
+    inicio_del_dia_utc,
     inicio_del_mes_utc,
     limites_del_dia_utc,
 )
@@ -19,6 +22,9 @@ from utils.horario import (
 router = APIRouter(prefix="/asistencia", tags=["Asistencia"])
 
 FUERA_DE_RANGO = "Fuera de rango"
+
+# Tope de filas que devuelve una consulta del panel.
+MAXIMO_DE_REGISTROS = 1000
 
 
 def buscar_fichaje_del_dia(db: Session, usuario_id: int, tipo: str, ahora):
@@ -66,6 +72,61 @@ def resumen_del_mes(db: Session, usuario: models.Usuario, ahora) -> dict:
         "retardos": sum(e.estatus_asistencia == "Retardo" for e in entradas),
         "faltas": faltas,
     }
+
+
+# CONSULTAR FICHAJES (los más recientes primero; las fechas son días de México)
+@router.get("/", response_model=List[AsistenciaResponse])
+def listar_asistencias(
+    desde: Optional[date] = None,
+    hasta: Optional[date] = None,
+    obra_id: Optional[int] = None,
+    usuario_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    consulta = db.query(models.Asistencia)
+    if desde is not None:
+        consulta = consulta.filter(
+            models.Asistencia.fecha_hora_fichaje >= inicio_del_dia_utc(desde)
+        )
+    if hasta is not None:
+        consulta = consulta.filter(
+            models.Asistencia.fecha_hora_fichaje
+            < inicio_del_dia_utc(hasta + timedelta(days=1))
+        )
+    if obra_id is not None:
+        consulta = consulta.filter(models.Asistencia.obra_id == obra_id)
+    if usuario_id is not None:
+        consulta = consulta.filter(models.Asistencia.usuario_id == usuario_id)
+    return (
+        consulta.order_by(models.Asistencia.fecha_hora_fichaje.desc())
+        .limit(MAXIMO_DE_REGISTROS)
+        .all()
+    )
+
+
+# CONSULTAR FALTAS (las más recientes primero)
+@router.get("/faltas", response_model=List[FaltaResponse])
+def listar_faltas(
+    desde: Optional[date] = None,
+    hasta: Optional[date] = None,
+    obra_id: Optional[int] = None,
+    usuario_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    consulta = db.query(models.Falta)
+    if desde is not None:
+        consulta = consulta.filter(models.Falta.fecha >= desde)
+    if hasta is not None:
+        consulta = consulta.filter(models.Falta.fecha <= hasta)
+    if obra_id is not None:
+        consulta = consulta.filter(models.Falta.obra_id == obra_id)
+    if usuario_id is not None:
+        consulta = consulta.filter(models.Falta.usuario_id == usuario_id)
+    return (
+        consulta.order_by(models.Falta.fecha.desc(), models.Falta.id.desc())
+        .limit(MAXIMO_DE_REGISTROS)
+        .all()
+    )
 
 
 @router.post("/fichar", response_model=AsistenciaResponse, status_code=201)

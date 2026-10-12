@@ -86,7 +86,7 @@ def test_las_listas_se_filtran_por_prioridad_y_estatus(db, usuario, monkeypatch)
     incidencias.crear_incidencia(reporte(usuario, "ahí voy llegando"), db)
 
     def listar(**filtros):
-        filtros = {"prioridad": None, "estatus_revision": None, "usuario_id": None} | filtros
+        filtros = {"prioridad": None, "estatus_revision": None, "usuario_id": None, "desde": None, "hasta": None} | filtros
         return incidencias.listar_incidencias(db=db, **filtros)
 
     assert [i.prioridad for i in listar()] == ["Media", "Alta"]

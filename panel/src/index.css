@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  /* Color de la marca: un verde azulado sobrio */
+  --color-marca-50: #effaf8;
+  --color-marca-100: #d5f1ec;
+  --color-marca-600: #0f766e;
+  --color-marca-700: #0b5f59;
+  --color-marca-900: #0c2f2d;
+
+  /* Fondo y texto */
+  --color-fondo: #f6f7f8;
+  --color-tinta: #17212b;
+  --color-tenue: #5c6b7a;
+  --color-linea: #e2e6ea;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-tinta);
+}
+
+/* El mapa queda por debajo de las ventanas del panel */
+.leaflet-container {
+  z-index: 0;
+  font-family: inherit;
+}
+
+dialog::backdrop {
+  background: rgb(15 23 32 / 0.45);
+}
