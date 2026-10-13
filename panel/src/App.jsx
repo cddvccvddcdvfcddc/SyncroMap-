@@ -7,6 +7,7 @@ import Incidencias from "./paginas/Incidencias.jsx";
 import Mapa from "./paginas/Mapa.jsx";
 import Obras from "./paginas/Obras.jsx";
 import Personal from "./paginas/Personal.jsx";
+import Reportes from "./paginas/Reportes.jsx";
 import { alCambiarSesion, cerrarSesion, leerSesion } from "./sesion.js";
 
 const PAGINAS = [
@@ -14,6 +15,7 @@ const PAGINAS = [
   { ruta: "mapa", nombre: "Mapa", componente: Mapa },
   { ruta: "asistencias", nombre: "Asistencias", componente: Asistencias },
   { ruta: "incidencias", nombre: "Incidencias", componente: Incidencias },
+  { ruta: "reportes", nombre: "Reportes", componente: Reportes },
   { ruta: "personal", nombre: "Personal", componente: Personal },
   { ruta: "obras", nombre: "Obras", componente: Obras },
 ];

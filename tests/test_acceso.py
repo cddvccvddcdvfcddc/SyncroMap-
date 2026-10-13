@@ -161,6 +161,9 @@ RUTAS_DEL_PANEL = [
     "/asistencia/",
     "/asistencia/faltas",
     "/incidencias/",
+    "/reportes/resumen?desde=2026-10-01&hasta=2026-10-31",
+    "/reportes/excel?desde=2026-10-01&hasta=2026-10-31",
+    "/reportes/pdf?desde=2026-10-01&hasta=2026-10-31",
     "/acceso/yo",
 ]
 

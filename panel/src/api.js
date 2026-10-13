@@ -16,7 +16,7 @@ function mensajeDeError(datos, estado) {
   return `El servidor respondió con un error (${estado}).`;
 }
 
-async function pedir(ruta, { metodo = "GET", cuerpo, filtros } = {}) {
+async function pedir(ruta, { metodo = "GET", cuerpo, filtros, comoArchivo = false } = {}) {
   const url = new URL(URL_API + ruta);
   for (const [clave, valor] of Object.entries(filtros ?? {})) {
     if (valor !== "" && valor !== null && valor !== undefined) {
@@ -44,6 +44,7 @@ async function pedir(ruta, { metodo = "GET", cuerpo, filtros } = {}) {
   }
 
   if (respuesta.status === 204) return null;
+  if (comoArchivo && respuesta.ok) return respuesta.blob();
   const datos = await respuesta.json().catch(() => null);
   // La sesión venció o ya no es válida: se regresa a la pantalla de entrada.
   if (respuesta.status === 401 && token) cerrarSesion();
@@ -75,4 +76,17 @@ export const api = {
   incidencias: (filtros) => pedir("/incidencias/", { filtros }),
   revisarIncidencia: (id, cambios) =>
     pedir(`/incidencias/${id}/revision`, { metodo: "PUT", cuerpo: cambios }),
+
+  // Filtros: desde, hasta (obligatorios) y obra_id
+  resumenDelReporte: (filtros) => pedir("/reportes/resumen", { filtros }),
+  // formato: "excel" o "pdf". El archivo se pide con la sesión y luego se guarda.
+  descargarReporte: async (formato, filtros, nombre) => {
+    const archivo = await pedir(`/reportes/${formato}`, { filtros, comoArchivo: true });
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(archivo);
+    enlace.download = nombre;
+    enlace.click();
+    // Se libera un momento después, para no cortar la descarga.
+    setTimeout(() => URL.revokeObjectURL(enlace.href), 1000);
+  },
 };

@@ -3,7 +3,15 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import acceso, obras, usuarios, asistencia, incidencias, whatsapp
+from routers import (
+    acceso,
+    asistencia,
+    incidencias,
+    obras,
+    reportes,
+    usuarios,
+    whatsapp,
+)
 from tareas import iniciar_planificador
 
 # Las tablas se crean y modifican con Alembic: py -m alembic upgrade head
@@ -46,6 +54,7 @@ app.include_router(obras.router, dependencies=solo_con_sesion)
 app.include_router(usuarios.router, dependencies=solo_con_sesion)
 app.include_router(asistencia.router, dependencies=solo_con_sesion)
 app.include_router(incidencias.router, dependencies=solo_con_sesion)
+app.include_router(reportes.router, dependencies=solo_con_sesion)
 
 # El webhook no lleva sesión: Meta firma cada mensaje y esa firma se verifica.
 app.include_router(whatsapp.router)
