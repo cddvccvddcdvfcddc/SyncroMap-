@@ -1,5 +1,7 @@
 // Todas las llamadas del panel al servidor de SyncroMap (FastAPI).
 
+import { cerrarSesion, leerSesion } from "./sesion.js";
+
 const URL_API = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
 function mensajeDeError(datos, estado) {
@@ -22,11 +24,17 @@ async function pedir(ruta, { metodo = "GET", cuerpo, filtros } = {}) {
     }
   }
 
+  const cabeceras = {};
+  if (cuerpo) cabeceras["Content-Type"] = "application/json";
+  // El token de la sesión acompaña a cada petición.
+  const token = leerSesion()?.token;
+  if (token) cabeceras.Authorization = `Bearer ${token}`;
+
   let respuesta;
   try {
     respuesta = await fetch(url, {
       method: metodo,
-      headers: cuerpo ? { "Content-Type": "application/json" } : undefined,
+      headers: cabeceras,
       body: cuerpo ? JSON.stringify(cuerpo) : undefined,
     });
   } catch {
@@ -37,11 +45,15 @@ async function pedir(ruta, { metodo = "GET", cuerpo, filtros } = {}) {
 
   if (respuesta.status === 204) return null;
   const datos = await respuesta.json().catch(() => null);
+  // La sesión venció o ya no es válida: se regresa a la pantalla de entrada.
+  if (respuesta.status === 401 && token) cerrarSesion();
   if (!respuesta.ok) throw new Error(mensajeDeError(datos, respuesta.status));
   return datos;
 }
 
 export const api = {
+  entrar: (credenciales) => pedir("/acceso/", { metodo: "POST", cuerpo: credenciales }),
+
   obras: (incluirInactivos = false) =>
     pedir("/obras/", { filtros: { incluir_inactivos: incluirInactivos } }),
   crearObra: (obra) => pedir("/obras/", { metodo: "POST", cuerpo: obra }),

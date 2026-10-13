@@ -9,6 +9,9 @@ os.environ["WHATSAPP_VERIFY_TOKEN"] = "token-de-prueba"
 os.environ["WHATSAPP_TOKEN"] = "sin-token"
 os.environ["WHATSAPP_PHONE_ID"] = "0"
 
+# Clave ficticia para firmar las sesiones del panel.
+os.environ["JWT_SECRET"] = "clave-de-prueba-solo-para-las-pruebas-automaticas"
+
 from datetime import time
 
 import pytest

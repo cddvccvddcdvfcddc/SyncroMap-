@@ -132,3 +132,31 @@ class IncidenciaRevision(BaseModel):
     # Lo que no se envía se confirma tal como lo propuso el clasificador.
     categoria: Optional[Literal["Retardo", "Ausencia", "Permiso", "General"]] = None
     prioridad: Optional[Literal["Alta", "Media", "Baja"]] = None
+
+
+# ==========================================
+# ESQUEMAS PARA EL ACCESO AL PANEL
+# ==========================================
+
+
+class Credenciales(BaseModel):
+    usuario: str = Field(..., max_length=50)
+    contrasena: str = Field(..., max_length=200)
+
+
+class AdministradorResponse(BaseModel):
+    id: int
+    usuario: str
+    nombre: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SesionResponse(BaseModel):
+    token: str
+    administrador: AdministradorResponse
+
+
+class CambioDeContrasena(BaseModel):
+    actual: str = Field(..., max_length=200)
+    nueva: str = Field(..., max_length=200)

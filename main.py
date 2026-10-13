@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import obras, usuarios, asistencia, incidencias, whatsapp
+from routers import acceso, obras, usuarios, asistencia, incidencias, whatsapp
 from tareas import iniciar_planificador
 
 # Las tablas se crean y modifican con Alembic: py -m alembic upgrade head
@@ -38,10 +38,16 @@ app.add_middleware(
 )
 
 # Conectar las rutas de cada módulo.
-app.include_router(obras.router)
-app.include_router(usuarios.router)
-app.include_router(asistencia.router)
-app.include_router(incidencias.router)
+app.include_router(acceso.router)
+
+# Todo lo que usa el panel exige haber iniciado sesión.
+solo_con_sesion = [Depends(acceso.administrador_actual)]
+app.include_router(obras.router, dependencies=solo_con_sesion)
+app.include_router(usuarios.router, dependencies=solo_con_sesion)
+app.include_router(asistencia.router, dependencies=solo_con_sesion)
+app.include_router(incidencias.router, dependencies=solo_con_sesion)
+
+# El webhook no lleva sesión: Meta firma cada mensaje y esa firma se verifica.
 app.include_router(whatsapp.router)
 
 

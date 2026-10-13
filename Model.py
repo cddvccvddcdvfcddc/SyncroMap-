@@ -52,6 +52,19 @@ class Usuario(Base):
     obra = relationship("Obra", backref="usuarios")
 
 
+class Administrador(Base):
+    # Persona que entra al panel web; no tiene que ser un trabajador con WhatsApp
+    __tablename__ = "administradores"
+
+    id = Column(Integer, primary_key=True)
+    usuario = Column(String(50), unique=True, nullable=False)
+    nombre = Column(String(100), nullable=False)
+    # Resumen de la contraseña (scrypt); la contraseña misma nunca se guarda
+    contrasena_hash = Column(String(200), nullable=False)
+    activo = Column(Boolean, default=True)
+    creado_en = Column(DateTime, default=ahora_utc)
+
+
 class Asistencia(Base):
     __tablename__ = "asistencias"
     __table_args__ = (
